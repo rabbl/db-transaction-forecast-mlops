@@ -16,26 +16,49 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
-## Install local requirements
-install-local:
-	docker compose run --rm airflow-webserver pip install --no-cache-dir -r requirements.txt
+VENV_PATH = .venv
+
+.activate:
+	test -d "$(VENV_PATH)" || python -m venv "$(VENV_PATH)"
+
+## Install local environment
+install-dev:
+	python -m venv $(VENV_PATH) && source "$(VENV_PATH)/bin/activate" && pip install -r requirements.txt
 	$(done)
+.PHONY: install
+
+## Test local environment
+test-dev: .activate
+	source "$(VENV_PATH)/bin/activate" && pytest
+	$(done)
+.PHONY: test
+
+## Update local environment
+update-dev: .activate
+	echo "Updating project"
+	source "$(VENV_PATH)/bin/activate" && pip install --upgrade -r requirements.txt
+	$(done)
+.PHONY: update
 
 ## Initialize Airflow
 init-airflow:
 	mkdir -p ./dags ./logs ./plugins
 	@echo AIRFLOW_UID=$(shell id -u) > .env
 	docker compose up airflow-init
+	$(done)
+.PHONY: init-airflow
 
 ## Start Containers
 start:
 	docker compose up -d --force-recreate
 	$(done)
+.PHONY: start
 
 ## Stop Containers
 stop:
 	docker compose down
 	$(done)
+.PHONY: stop
 
 ## Restart Containers
 rebuild:
@@ -43,11 +66,13 @@ rebuild:
 	docker compose up --build
 	docker compose up -d --force-recreate
 	$(done)
+.PHONY: rebuild
 
 ## Show Airflow Logs
 airflow-logs:
 	docker-compose logs airflow-webserver
 	$(done)
+.PHONY: airflow-logs
 
 ## Remove all containers and volumes
 remove:
@@ -55,8 +80,10 @@ remove:
 	docker rm $(docker ps -aq)
 	docker volume rm $(docker volume ls -q)
 	$(done)
+.PHONY: remove
 
 ## Show disk space
 free-space:
 	df -h
 	$(done)
+.PHONY: free-space

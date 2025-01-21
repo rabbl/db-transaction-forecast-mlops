@@ -16,6 +16,30 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
+VENV_PATH = .venv
+
+.activate:
+	test -d "$(VENV_PATH)" || python -m venv "$(VENV_PATH)"
+
+## Install local environment
+install-dev:
+	python -m venv $(VENV_PATH) && source "$(VENV_PATH)/bin/activate" && pip install -r requirements.txt
+	$(done)
+.PHONY: install
+
+## Test local environment
+test-dev: .activate
+	source "$(VENV_PATH)/bin/activate" && pytest
+	$(done)
+.PHONY: test
+
+## Update local environment
+update-dev: .activate
+	echo "Updating project"
+	source "$(VENV_PATH)/bin/activate" && pip install --upgrade -r requirements.txt
+	$(done)
+.PHONY: update
+
 ## Initialize Airflow
 init-airflow:
 	mkdir -p ./dags ./logs ./plugins

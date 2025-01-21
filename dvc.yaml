@@ -1,0 +1,13 @@
+stages:
+  data_ingestion:
+    cmd: python src/pipeline_steps/stage01_data_ingestion.py
+    deps:
+      - src/config.yaml
+      - src/pipeline_steps/stage01_data_ingestion.py
+    outs:
+      - data/raw/data.zip
+      - data/raw/project_bidders.csv
+      - data/raw/project_positions.csv
+      - data/raw/project_suppliers.csv
+      - data/raw/projects.csv
+      - data/raw/subprojects.csv

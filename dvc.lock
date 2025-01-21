@@ -1,0 +1,34 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/pipeline_steps/stage01_data_ingestion.py
+    deps:
+    - path: src/config.yaml
+      hash: md5
+      md5: f44325a5f3b327681fdbd81e2031623f
+      size: 169
+    - path: src/pipeline_steps/stage01_data_ingestion.py
+      hash: md5
+      md5: b28db6e09b94722b5f05d70f9613728b
+      size: 1107
+    outs:
+    - path: data/raw/project_bidders.csv
+      hash: md5
+      md5: 00c0d121e5cf9ed3cd8e9903128e3c84
+      size: 2770762
+    - path: data/raw/project_positions.csv
+      hash: md5
+      md5: 27fbda6c54358fbbf9dca582a90961a4
+      size: 3618926
+    - path: data/raw/project_suppliers.csv
+      hash: md5
+      md5: 32725c9cc4d7303856741cd6475cb388
+      size: 244259
+    - path: data/raw/projects.csv
+      hash: md5
+      md5: fe5e33b1498ce3d7a0257e3c8d2168bd
+      size: 21872910
+    - path: data/raw/subprojects.csv
+      hash: md5
+      md5: 59f243cf1b8a0045027bc0e266c28daf
+      size: 21569761
